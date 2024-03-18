@@ -1,0 +1,1 @@
+rp {DATA} hellowolrd *.txt

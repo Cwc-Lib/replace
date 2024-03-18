@@ -9,6 +9,19 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+char *strndup(const char *s, size_t n) {
+    size_t len = strlen(s);
+    if (n < len) {
+        len = n;
+    }
+    char *dup = (char *)malloc(len + 1);
+    if (dup != NULL) {
+        memcpy(dup, s, len);
+        dup[len] = '\0';
+    }
+    return dup;
+}
+
 // Generate a FilePathRule from the provided path, separating the target and
 // prefix if present.
 struct FilePathRule generateFilePathRule(char *path) {
@@ -100,12 +113,15 @@ void forEachFile(const char *bp, const char *pr, struct Args args, int *count,
     }
 
     sprintf(path, "%s/%s", bp, entry->d_name);
-
+    
+    //TODO FIXEME
+    printf("\nFIXME(if folder): %s", path);
+/*
     if (entry->d_type == DT_DIR) {
       forEachFile(path, pr, args, count, result, replace);
       continue;
     }
-
+*/
     if (pr == NULL || (pr && strstr(entry->d_name, pr) != NULL)) {
       int hasReplaced = replace(args, path);
       if (hasReplaced != 0) {
@@ -178,7 +194,7 @@ char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args args,
 // If something wents wrong, result will be NULL and appropriate error message
 // will be displayed in console.
 char *readFileContent(const char *path) {
-  FILE *file = fopen(path, "r");
+  FILE *file = fopen(path, "rb+");
   if (file == NULL) {
     printf("Cannot open: %s\n", path);
     return NULL;
@@ -196,7 +212,7 @@ char *readFileContent(const char *path) {
 
   rewind(file);
   if (fread(res, 1, size, file) != size) {
-    printf("Cannot read: %s\n", path);
+    printf("Cannot read: %s, %d, %d\n", path, size, fread(res, 1, size, file));
     fclose(file);
     free(res);
     return NULL;

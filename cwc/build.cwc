@@ -1,0 +1,16 @@
+-{vFlag}=""
+>
+-{pObj}=obj/{_sPlatform}_{_sOpt}/
+-{pOut}=_out/{_sPlatform}_{_sOpt}/
+-{pSrc}=../src/
+-{vIncl}=-I ../src/
+>
+;Build
+-c {pSrc}main.c -o {pObj}main.o
+>
+;Link
+-o {pObj} -#To {pOut}/rp.* 
+>
+;Run
+-#Run
+>
