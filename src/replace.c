@@ -7,8 +7,9 @@
 #include <string.h>
 
 // Replaces args.target with args.replace in zContent.
-char *replaceXY(struct Args args, const char *zContent) {
-  size_t xLen = strlen(args.target);
+//char *replaceXY(struct Args args, const char *zContent) {
+char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) {
+  size_t xLen = strlen(target);
   size_t zLen = strlen(zContent);
 
   char *buffer = malloc((zLen + 1) * sizeof(char));
@@ -22,23 +23,23 @@ char *replaceXY(struct Args args, const char *zContent) {
 
   size_t pos = 0;
   while (pos < zLen) {
-    char *match = strstr(zContent + pos, args.target);
+    char *match = strstr(zContent + pos, target);
 
     if (match == NULL) {
       strcat(buffer, zContent + pos);
       break;
     }
 
-    if (args.wordMatch == 1) {
+    if (wordMatch == 1) {
       strncat(buffer, zContent + pos, match - (zContent + pos));
-      strcat(buffer, args.replace);
+      strcat(buffer, replace);
       pos = match - zContent + xLen;
       continue;
     }
 
     if ((match == zContent || isspace(*(match - 1))) && (match[xLen] == '\0' || isspace(match[xLen]))) {
       strncat(buffer, zContent + pos, match - (zContent + pos));
-      strcat(buffer, args.replace);
+      strcat(buffer, replace);
       pos = match - zContent + xLen;
     } else {
       strncat(buffer, zContent + pos, match - (zContent + pos) + 1);
@@ -83,8 +84,9 @@ int replace(struct Args args, const char *path) {
   if (zContent == NULL) {
     return 1;
   }
-
-   char *modifiedContent = replaceXY(args, zContent);
+//char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) 
+   char *modifiedContent = replaceXY(args.target,args.replace,args.wordMatch, zContent);
+  // char *modifiedContent = replaceXY(args, zContent);
    if (modifiedContent == NULL) {
       free(zContent);
       return 1;
