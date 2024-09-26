@@ -58,12 +58,24 @@ int replace(struct Args args, const char *path) {
     return 1;
   }
 
-  char *modifiedContent = replaceXY(args, zContent);
-  if (modifiedContent == NULL) {
-    free(zContent);
-    return 1;
-  }
-
+   char *modifiedContent = replaceXY(args, zContent);
+   if (modifiedContent == NULL) {
+      free(zContent);
+      return 1;
+   }
+        printf("\nWrite file %s\n", path);
+   if(args.out_dir){
+      printf("\nWrite file %s\n", path);
+      int sz = strlen(path);
+      while(sz>0 && path[sz]!='/' || path[sz]!='\\'){sz--;}
+      if(sz){
+         char vla[sz+args.out_dirLen+1];
+         sprintf(vla, "%.*s%s", path,sz, args.out_dir );
+         printf("\nOut file %s\n", path);
+      }
+   }
+  
+  
   if (strcmp(zContent, modifiedContent) == 0) {
     free(zContent);
     free(modifiedContent);
@@ -76,6 +88,7 @@ int replace(struct Args args, const char *path) {
     free(modifiedContent);
     return 1;
   }
+
 
   size_t len = strlen(modifiedContent);
   fwrite(modifiedContent, sizeof(char), len, file);

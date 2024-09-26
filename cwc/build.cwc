@@ -6,11 +6,11 @@
 -{vIncl}=-I ../src/
 >
 ;Build
--c {pSrc}main.c -o {pObj}main.o
+-c {pSrc}main.c -o {pObj}main.o -I ../src/
 >
 ;Link
 -o {pObj} -#To {pOut}/rp.* 
 >
 ;Run
--#Run
+-#Run _out/Windows_{_sOpt}/rp.exe -o test/ {DATA} hellowolrd *.txt
 >

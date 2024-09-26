@@ -20,6 +20,14 @@ struct Args parseArgs(int argc, char *argv[]) {
     args.wordMatch = 0;
     idx++;
   }
+  if (strcmp("-o", argv[idx]) == 0 || strcmp("--out", argv[idx]) == 0) {
+    args.wordMatch = 0;
+    idx++;
+    args.out_dir = argv[idx];
+    args.out_dirLen = strlen(args.out_dir);
+    idx++;
+    printf("output files to: %s\n",  args.out_dir);
+  }
 
   args.target = argv[idx];
   idx++;

@@ -11,10 +11,13 @@ struct Args {
   char *target;  /// The character to be replaced (X).
   char *replace; /// The character to replace 'target' with (Y).
   char **paths;  /// An array of strings representing paths (Z).
+  char* out_dir;  /// Directory output copy of all files with replcement, flag: -o.
+  int out_dirLen;  /// The number of paths in the 'paths' array.
   int pathsLen;  /// The number of paths in the 'paths' array.
   int wordMatch; /// This int flag determines whether the replacement
                  /// algorithm requires an exact, space-free match for
                  /// segments to be replaced.
+                 
 };
 
 /**
