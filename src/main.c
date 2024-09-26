@@ -19,11 +19,13 @@ int main(int argc, char *argv[]) {
     len = 1;
   }
 
-  char **replaced = forEachRule(rules, len, args, replace);
+  char **replaced = forEachRule(rules, len, &args, replace);
   for (int i = 0; replaced[i] != NULL; i++) {
-    printf("Replaced: '%s' with '%s' from %s\n", args.target, args.replace, replaced[i]);
+   for(int i = 0; i < args.action_sz; i++){
+   //  modifiedContent = replaceXY(args.action[i].target, args.action[i].replace, args.wordMatch, modifiedContent);
+     printf("Replaced: '%s' with '%s' from %s\n", args.action[i].target, args.action[i].replace, replaced[i]);
+   }
   }
-
   free(replaced);
   free(rules);
 

@@ -14,8 +14,8 @@ int debugRun(int argc, char *argv[]) {
   printf(">>> Parsing Args <<<\n");
   printf("---------------------------\n");
   printf("Word match enabled: %d\n", args.wordMatch);
-  printf("X: %s\n", args.target);
-  printf("Y: %s\n", args.replace);
+  //printf("X: %s\n", args.target);
+  //printf("Y: %s\n", args.replace);
   printf("Z:\n");
 
   struct FilePathRule *rules = generateFilePathRules(args.pathsLen, args.paths);
@@ -52,9 +52,12 @@ int debugRun(int argc, char *argv[]) {
   printf(">>> Replacing in Paths <<<\n");
   printf("--------------------------\n");
 
-  char **replaced = forEachRule(rules, len, args, replace);
+  char **replaced = forEachRule(rules, len, &args, replace);
   for (int i = 0; replaced[i] != NULL; i++) {
-    printf("Replaced: '%s' with '%s' in %s\n", args.target, args.replace, replaced[i]);
+   // printf("Replaced: '%s' with '%s' in %s\n", args.target, args.replace, replaced[i]);
+      
+    printf("Replaced: '%s' with '%s' in %s\n", "args.target", "args.replace", replaced[i]);
+    
   }
 
   free(replaced);

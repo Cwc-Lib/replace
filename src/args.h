@@ -7,9 +7,23 @@
  * This structure is used to hold the command-line arguments parsed from the
  * input arguments of a program.
  */
+enum Action{
+  ACT_REPLACE,
+  ACT_ADD,
+};
+
+typedef struct action_t{
+  enum Action type;
+  char* target;  /// The character to be replaced (X).
+  char* replace; /// The character to replace 'target' with (Y).
+}action_t;
+ 
 struct Args {
-  char *target;  /// The character to be replaced (X).
-  char *replace; /// The character to replace 'target' with (Y).
+  //char* target;  /// The character to be replaced (X).
+  //char* replace; /// The character to replace 'target' with (Y).
+  action_t action[512];
+  int action_sz;
+  
   char **paths;  /// An array of strings representing paths (Z).
   char* out_dir;  /// Directory output copy of all files with replcement, flag: -o.
   int out_dirLen;  /// The number of paths in the 'paths' array.

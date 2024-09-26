@@ -90,7 +90,7 @@ struct FilePathRule *generateFilePathRules(int pathsLen, char **paths) {
 
 // Recursively collects files and directories under the specified base path
 // (bp), based on the given prefix (pr) and stores them in the result array.
-void forEachFile(const char *bp, const char *pr, struct Args args, int *count,
+void forEachFile(const char *bp, const char *pr, struct Args* args, int *count,
                  char ***result, rp replace) {
   DIR *dir;
   struct dirent *entry;
@@ -141,7 +141,7 @@ void forEachFile(const char *bp, const char *pr, struct Args args, int *count,
 }
 
 // Generates full paths based on an array of FilePathRule structures.
-char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args args,
+char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args,
                    rp replace) {
   char **result = (char **)malloc(sizeof(char *));
   if (!result) {

@@ -38,6 +38,6 @@ char *replaceXY(const struct Args args, const char *zContent);
  * @param path The path string in which replacements will be made.
  * @return An integer representing the number of replacements made.
  */
-int replace(const struct Args args, const char *path);
+int replace(const struct Args* args, const char *path);
 
 #endif

@@ -26,7 +26,7 @@ struct FilePathRule {
  * @typedef rp
  * @brief A function pointer type for the replace method.
  */
-typedef int (*rp)(struct Args args, const char *path);
+typedef int (*rp)(struct Args* args, const char *path);
 
 /**
  * @brief Generate a FilePathRule from the provided path, separating the target
@@ -65,7 +65,7 @@ struct FilePathRule *generateFilePathRules(int pathsLen, char **path);
  * @param result An array to store the collected file and directory paths.
  * @param replace A function pointer for a custom replacement method.
  */
-void forEachFile(const char *bp, const char *pr, struct Args args, int *count, char ***result,
+void forEachFile(const char *bp, const char *pr, struct Args* args, int *count, char ***result,
                  rp replace);
 
 /**
@@ -80,7 +80,7 @@ void forEachFile(const char *bp, const char *pr, struct Args args, int *count, c
  * @param replace A function pointer for a custom replacement method.
  * @return An array of full paths based on the rules provided.
  */
-char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args args,
+char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args,
                    rp replace);
 
 /**

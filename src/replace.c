@@ -51,9 +51,9 @@ char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent
 }
 
 
-int write_file(struct Args args, const char *path,  char *zContent, char *modifiedContent) {
+int write_file(struct Args* args, const char *path,  char *zContent, char *modifiedContent) {
     
-  if (!args.out_dir && strcmp(zContent, modifiedContent) == 0) {
+  if (!args->out_dir && strcmp(zContent, modifiedContent) == 0) {
     free(zContent);
     free(modifiedContent);
     return 1;
@@ -79,13 +79,18 @@ int write_file(struct Args args, const char *path,  char *zContent, char *modifi
 // Replaces x with y in FILE of path.
 // If something wents wrong, error will be logged in console
 // appropriate error number will be returned.
-int replace(struct Args args, const char *path) {
+int replace(struct Args* args, const char *path) {
   char *zContent = readFileContent(path);
   if (zContent == NULL) {
     return 1;
   }
+    char *modifiedContent=zContent;
 //char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) 
-   char *modifiedContent = replaceXY(args.target,args.replace,args.wordMatch, zContent);
+  
+  for(int i = 0; i < args->action_sz; i++){
+      modifiedContent = replaceXY(args->action[i].target, args->action[i].replace, args->wordMatch, modifiedContent);
+  }
+  
   // char *modifiedContent = replaceXY(args, zContent);
    if (modifiedContent == NULL) {
       free(zContent);
@@ -96,13 +101,13 @@ int replace(struct Args args, const char *path) {
    //////////////////
    //////////////////
    printf("\nWrite file %s\n", path);
-   if(args.out_dir){
+   if(args->out_dir){
       printf("\nWrite file %s\n", path);
       int sz = strlen(path)-1;
       while(sz>0 && !(path[sz]=='/' || path[sz]=='\\')){sz--;}   
       if(sz){
-        char vla[sz+args.out_dirLen+1];
-         sprintf(vla, "%.*s%s%s",sz+1, path, args.out_dir, &path[sz+1] );
+        char vla[sz+args->out_dirLen+1];
+         sprintf(vla, "%.*s%s%s",sz+1, path, args->out_dir, &path[sz+1] );
          printf("\nOut file %s\n", vla);
          write_file(args, vla, zContent,modifiedContent);
          return 0;
