@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
   char **replaced = forEachRule(rules, len, args, replace);
   for (int i = 0; replaced[i] != NULL; i++) {
-    printf("Replaced: '%s' with '%s' in %s\n", args.target, args.replace, replaced[i]);
+    printf("Replaced: '%s' with '%s' from %s\n", args.target, args.replace, replaced[i]);
   }
 
   free(replaced);

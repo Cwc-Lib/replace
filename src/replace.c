@@ -49,6 +49,32 @@ char *replaceXY(struct Args args, const char *zContent) {
   return buffer;
 }
 
+
+int write_file(struct Args args, const char *path,  char *zContent, char *modifiedContent) {
+    
+  if (!args.out_dir && strcmp(zContent, modifiedContent) == 0) {
+    free(zContent);
+    free(modifiedContent);
+    return 1;
+  }
+
+  FILE *file = fopen(path, "w");
+  if (file == NULL) {
+    free(zContent);
+    free(modifiedContent);
+    return 1;
+  }
+
+  size_t len = strlen(modifiedContent);
+  fwrite(modifiedContent, sizeof(char), len, file);
+
+
+  fclose(file);
+  free(zContent);
+  free(modifiedContent);
+  return 0;
+}
+
 // Replaces x with y in FILE of path.
 // If something wents wrong, error will be logged in console
 // appropriate error number will be returned.
@@ -63,39 +89,26 @@ int replace(struct Args args, const char *path) {
       free(zContent);
       return 1;
    }
-        printf("\nWrite file %s\n", path);
+   
+   //////////////////
+   //////////////////
+   //////////////////
+   printf("\nWrite file %s\n", path);
    if(args.out_dir){
       printf("\nWrite file %s\n", path);
-      int sz = strlen(path);
-      while(sz>0 && path[sz]!='/' || path[sz]!='\\'){sz--;}
+      int sz = strlen(path)-1;
+      while(sz>0 && !(path[sz]=='/' || path[sz]=='\\')){sz--;}   
       if(sz){
-         char vla[sz+args.out_dirLen+1];
-         sprintf(vla, "%.*s%s", path,sz, args.out_dir );
-         printf("\nOut file %s\n", path);
+        char vla[sz+args.out_dirLen+1];
+         sprintf(vla, "%.*s%s%s",sz+1, path, args.out_dir, &path[sz+1] );
+         printf("\nOut file %s\n", vla);
+         write_file(args, vla, zContent,modifiedContent);
+         return 0;
       }
    }
-  
-  
-  if (strcmp(zContent, modifiedContent) == 0) {
-    free(zContent);
-    free(modifiedContent);
-    return 1;
-  }
-
-  FILE *file = fopen(path, "w");
-  if (file == NULL) {
-    free(zContent);
-    free(modifiedContent);
-    return 1;
-  }
-
-
-  size_t len = strlen(modifiedContent);
-  fwrite(modifiedContent, sizeof(char), len, file);
-
-  fclose(file);
-  free(zContent);
-  free(modifiedContent);
-
+     //////////////////
+   //////////////////
+ 
+  write_file(args, path, zContent,modifiedContent);
   return 0;
 }

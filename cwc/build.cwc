@@ -12,5 +12,6 @@
 -o {pObj} -#To {pOut}/rp.* 
 >
 ;Run
--#Run _out/Windows_{_sOpt}/rp.exe -o test/ {DATA} hellowolrd *.txt
+;-#Run _out/Windows_{_sOpt}/rp.exe -o test/ {DATA} hellowolrd *.txt
+-#Run _out/Windows_{_sOpt}/rp.exe -o test/ {DATA} hellowolrd test.cpp
 >
