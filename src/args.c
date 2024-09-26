@@ -15,11 +15,24 @@ struct Args parseArgs(int argc, char *argv[]) {
     return args;
   }
 
-  int idx = 1;
-  if (strcmp("-w", argv[idx]) == 0 || strcmp("--word", argv[idx]) == 0) {
-    args.wordMatch = 0;
-    idx++;
-  }
+   int idx = 1;
+   if (strcmp("-w", argv[idx]) == 0 || strcmp("--word", argv[idx]) == 0) {
+      args.wordMatch = 0;
+      idx++;
+   }
+
+   if (strcmp("-f", argv[idx]) == 0 || strcmp("--file", argv[idx]) == 0) {
+      idx++;
+      args.paths = (char **)malloc((argc - idx) * sizeof(char *));
+      while(idx<argc && argv[idx][0]!='-'){ 
+        args.paths[args.pathsLen] = (char *)malloc(strlen(argv[idx]) + 1);
+        strcpy(args.paths[args.pathsLen], argv[idx]);
+        args.pathsLen++;
+        idx++;
+      }
+   }
+   
+   
   if (strcmp("-o", argv[idx]) == 0 || strcmp("--out", argv[idx]) == 0) {
     args.wordMatch = 0;
     idx++;
@@ -32,8 +45,9 @@ struct Args parseArgs(int argc, char *argv[]) {
   args.target = argv[idx];
   idx++;
   args.replace = argv[idx];
-
   idx++;
+  
+  /*
   int zexpect = idx;
   if (argc > idx) {
     args.paths = (char **)malloc((argc - idx) * sizeof(char *));
@@ -52,7 +66,13 @@ struct Args parseArgs(int argc, char *argv[]) {
       strcpy(args.paths[pathidx], argv[idx]);
       args.pathsLen++;
     }
+  }*/
+  
+  if(args.pathsLen==0){
+   printf("error, -f flag required");
+   exit(0);
   }
+  
 
   return args;
 }

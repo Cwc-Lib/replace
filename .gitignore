@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 *.wdat
+*.wdat/
 _out/
 
 # Object files
