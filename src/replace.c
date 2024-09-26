@@ -8,10 +8,12 @@
 
 // Replaces args.target with args.replace in zContent.
 //char *replaceXY(struct Args args, const char *zContent) {
-char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) {
+char* replaceXY(char* target, char* replace, int wordMatch, const char *zContent) {
+
+printf("replaceXY : %s %s %d\n", target, replace, wordMatch);
+
   size_t xLen = strlen(target);
   size_t zLen = strlen(zContent);
-
   char *buffer = malloc((zLen + 1) * sizeof(char));
 
   if (buffer == NULL) {
@@ -89,6 +91,9 @@ int replace(struct Args* args, const char *path) {
   
   for(int i = 0; i < args->action_sz; i++){
       modifiedContent = replaceXY(args->action[i].target, args->action[i].replace, args->wordMatch, modifiedContent);
+      printf("-------------\n");
+      printf("modifiedContent : %s \n", modifiedContent);
+        printf("-------------\n");
   }
   
   // char *modifiedContent = replaceXY(args, zContent);
