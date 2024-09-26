@@ -8,47 +8,53 @@
 
 // Replaces args.target with args.replace in zContent.
 //char *replaceXY(struct Args args, const char *zContent) {
-char* replaceXY(char* target, char* replace, int wordMatch, const char *zContent) {
+char* replaceXY(enum Action action, char* target, char* replace, int wordMatch, const char *zContent) {
 
-printf("replaceXY : %s %s %d\n", target, replace, wordMatch);
+   //printf("replaceXY : %s %s %d\n", target, replace, wordMatch);
 
   size_t xLen = strlen(target);
   size_t zLen = strlen(zContent);
-  char *buffer = malloc((zLen + 1) * sizeof(char));
+  char *buffer = malloc((zLen*4 + 1) * sizeof(char)); //TODO x4 if replace > source
+  buffer[0]=0;
 
   if (buffer == NULL) {
     printf("Cannot allocate memory to replace x with y\n");
     return NULL;
   }
 
-  memset(buffer, 0, zLen + 1);
+  //memset(buffer, 0, zLen + 1);
 
   size_t pos = 0;
   while (pos < zLen) {
-    char *match = strstr(zContent + pos, target);
+      char *match = strstr(zContent + pos, target);
+      if (match == NULL) {
+         strcat(buffer, zContent + pos);//copy ending to buffer
+         break;
+      }
 
-    if (match == NULL) {
-      strcat(buffer, zContent + pos);
-      break;
-    }
+      if (wordMatch == 0 ||  //No word maching (space surround not require)
+         (wordMatch == 1 && ((match == zContent || isspace(*(match - 1))) && (match[xLen] == '\0' || isspace(match[xLen])))) //match surround by spaces            
+         ) {
+         
+         switch(action){
+            case ACT_REPLACE:{
+               strncat(buffer, zContent+pos, match - (zContent+pos));//copy preceding
+               strcat(buffer, replace);
+               pos = match - zContent + xLen;
+            }break;
+            case ACT_ADD:{
+               strncat(buffer, zContent+pos, match+xLen-(zContent+pos));//copy preceding
+               strcat(buffer, replace);
+               pos = match - zContent + xLen;
+            }break;
+         }
+         continue;
+      }
 
-    if (wordMatch == 1) {
-      strncat(buffer, zContent + pos, match - (zContent + pos));
-      strcat(buffer, replace);
-      pos = match - zContent + xLen;
-      continue;
-    }
-
-    if ((match == zContent || isspace(*(match - 1))) && (match[xLen] == '\0' || isspace(match[xLen]))) {
-      strncat(buffer, zContent + pos, match - (zContent + pos));
-      strcat(buffer, replace);
-      pos = match - zContent + xLen;
-    } else {
-      strncat(buffer, zContent + pos, match - (zContent + pos) + 1);
+      //copy & advance
+      strncat(buffer, zContent+pos, match - (zContent+pos) + 1); //copy & advance
       pos = match - zContent + 1;
-    }
   }
-
   return buffer;
 }
 
@@ -90,10 +96,10 @@ int replace(struct Args* args, const char *path) {
 //char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) 
   
   for(int i = 0; i < args->action_sz; i++){
-      modifiedContent = replaceXY(args->action[i].target, args->action[i].replace, args->wordMatch, modifiedContent);
-      printf("-------------\n");
-      printf("modifiedContent : %s \n", modifiedContent);
-        printf("-------------\n");
+      modifiedContent = replaceXY(args->action[i].type, args->action[i].target, args->action[i].replace, args->wordMatch, modifiedContent);
+     // printf("-------------\n");
+     // printf("modifiedContent : %s \n", modifiedContent);
+     // printf("-------------\n");
   }
   
   // char *modifiedContent = replaceXY(args, zContent);
@@ -105,9 +111,9 @@ int replace(struct Args* args, const char *path) {
    //////////////////
    //////////////////
    //////////////////
-   printf("\nWrite file %s\n", path);
+   //printf("\nWrite file %s\n", path);
    if(args->out_dir){
-      printf("\nWrite file %s\n", path);
+     // printf("\nFrom file %s\n", path);
       int sz = strlen(path)-1;
       while(sz>0 && !(path[sz]=='/' || path[sz]=='\\')){sz--;}   
       if(sz){

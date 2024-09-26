@@ -7,12 +7,10 @@ struct Args parseArgs(int argc, char *argv[]) {
    struct Args args={};
    setvbuf(stdout, NULL, _IONBF, 0);
    setvbuf(stderr, NULL, _IONBF, 0);
-  
-  //args.target = NULL;
-  //args.replace = NULL;
-  //args.paths = NULL;
-  args.pathsLen = 0;
-  args.wordMatch = 1;
+
+
+   args.pathsLen = 0;
+   args.wordMatch = 1;
 
   if (argc < 3) {
     return args;
@@ -55,15 +53,19 @@ struct Args parseArgs(int argc, char *argv[]) {
          printf("output files to: %s\n",  args.out_dir);
       }
       
-      if (strcmp("-r", argv[idx]) == 0)  {
+    //  if (strcmp("-r", argv[idx]) == 0)  {
+      if (argv[idx][0]=='-' && argv[idx][1]=='r')  {
+         if(argv[idx][2] == 'a'){
+            args.action[args.action_sz].type = ACT_ADD;
+         }else{
+            args.action[args.action_sz].type = ACT_REPLACE;
+         }
          idx++;
-         //args.target = argv[idx];
-         args.action[args.action_sz].type = ACT_REPLACE;
          args.action[args.action_sz].target = argv[idx];
-         printf("target: %s\n", args.action[args.action_sz].target);
+        // printf("target: %s\n", args.action[args.action_sz].target);
          idx++;
          args.action[args.action_sz].replace = argv[idx];
-         printf("repalce: %s\n", args.action[args.action_sz].replace);
+         //printf("replace: %s\n", args.action[args.action_sz].replace);
          idx++;
          args.action_sz++;
       }

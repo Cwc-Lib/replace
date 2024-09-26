@@ -15,7 +15,7 @@
 ;-#Run _out/Windows_{_sOpt}/rp.exe -o test/ {DATA} hellowolrd *.txt
 -#Run _out/Windows_{_sOpt}/rp.exe -f test.cpp -o test/ 
                -r {DATA} hellowolrd
-               -r {TEST} MyTest
+               -ra {TEST} MyTest
                
                
 >
