@@ -27,10 +27,10 @@ struct Args parseArgs(int argc, char *argv[]) {
     
    int idx = 1;
    while(idx<argc){
-
       if (strcmp("-w", argv[idx]) == 0 || strcmp("--word", argv[idx]) == 0) {
          args.wordMatch = 0;
          idx++;
+         continue;
       }
 
       if (strcmp("-f", argv[idx]) == 0 || strcmp("--file", argv[idx]) == 0) {
@@ -42,6 +42,7 @@ struct Args parseArgs(int argc, char *argv[]) {
            args.pathsLen++;
            idx++;
          }
+         continue;
       }
       
       if (strcmp("-o", argv[idx]) == 0 || strcmp("--out", argv[idx]) == 0) {
@@ -51,9 +52,10 @@ struct Args parseArgs(int argc, char *argv[]) {
          args.out_dirLen = strlen(args.out_dir);
          idx++;
          printf("output files to: %s\n",  args.out_dir);
+         continue;
       }
       
-    //  if (strcmp("-r", argv[idx]) == 0)  {
+
       if (argv[idx][0]=='-' && argv[idx][1]=='r')  {
          if(argv[idx][2] == 'a'){
             args.action[args.action_sz].type = ACT_ADD;
@@ -68,6 +70,7 @@ struct Args parseArgs(int argc, char *argv[]) {
          //printf("replace: %s\n", args.action[args.action_sz].replace);
          idx++;
          args.action_sz++;
+         continue;
       }
   }
   
