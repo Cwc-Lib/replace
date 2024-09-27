@@ -47,7 +47,7 @@ struct FilePathRule generateFilePathRule(char *path);
  * @param path An array of strings representing paths.
  * @return An array of FilePathRule structures generated from the input paths.
  */
-struct FilePathRule *generateFilePathRules(int pathsLen, char **path);
+struct FilePathRule *generateFilePathRules(int pathsLen, file_t* paths);
 
 /**
  * @brief Recursively collect files and directories under the specified base

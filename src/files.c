@@ -56,7 +56,7 @@ struct FilePathRule generateFilePathRule(char *path) {
 // Generate a list of FilePathRules from the provided list of paths.
 // Essentially, this function converts an Args structure into an array of
 // FilePathRules.
-struct FilePathRule *generateFilePathRules(int pathsLen, char **paths) {
+struct FilePathRule *generateFilePathRules(int pathsLen, file_t* paths) {
   if (pathsLen == 0 || paths == NULL) {
     struct FilePathRule *rules =
         (struct FilePathRule *)malloc(sizeof(struct FilePathRule));
@@ -82,7 +82,7 @@ struct FilePathRule *generateFilePathRules(int pathsLen, char **paths) {
   }
 
   for (int i = 0; i < pathsLen; i++) {
-    rules[i] = generateFilePathRule(paths[i]);
+    rules[i] = generateFilePathRule(paths[i].input);
   }
 
   return rules;

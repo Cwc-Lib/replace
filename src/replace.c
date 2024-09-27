@@ -8,7 +8,7 @@
 
 // Replaces args.target with args.replace in zContent.
 //char *replaceXY(struct Args args, const char *zContent) {
-char* replaceXY(enum Action action, char* target, char* replace, int wordMatch, const char *zContent) {
+char* replaceXY(enum Action action, char* target, char* replace, int* replace_count, int wordMatch, const char *zContent) {
 
    //printf("replaceXY : %s %s %d\n", target, replace, wordMatch);
 
@@ -48,6 +48,7 @@ char* replaceXY(enum Action action, char* target, char* replace, int wordMatch, 
                pos = match - zContent + xLen;
             }break;
          }
+         (*replace_count)++;
          continue;
       }
 
@@ -96,7 +97,7 @@ int replace(struct Args* args, const char *path) {
 //char *replaceXY(char* target, char* replace, int wordMatch, const char *zContent) 
   
   for(int i = 0; i < args->action_sz; i++){
-      modifiedContent = replaceXY(args->action[i].type, args->action[i].target, args->action[i].replace, args->wordMatch, modifiedContent);
+      modifiedContent = replaceXY(args->action[i].type, args->action[i].target, args->action[i].replace, &args->action[i].replace_count,args->wordMatch, modifiedContent);
      // printf("-------------\n");
      // printf("modifiedContent : %s \n", modifiedContent);
      // printf("-------------\n");
@@ -121,6 +122,7 @@ int replace(struct Args* args, const char *path) {
          sprintf(vla, "%.*s%s%s",sz+1, path, args->out_dir, &path[sz+1] );
          printf("\nOut file %s\n", vla);
          write_file(args, vla, zContent,modifiedContent);
+         
          return 0;
       }
    }

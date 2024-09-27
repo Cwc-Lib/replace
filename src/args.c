@@ -35,10 +35,10 @@ struct Args parseArgs(int argc, char *argv[]) {
 
       if (strcmp("-f", argv[idx]) == 0 || strcmp("--file", argv[idx]) == 0) {
          idx++;
-         args.paths = (char **)malloc((argc - idx) * sizeof(char *));
+         //args.paths = (char **)malloc( * sizeof(file_t));
          while(idx<argc && argv[idx][0]!='-'){ 
-           args.paths[args.pathsLen] = (char *)malloc(strlen(argv[idx]) + 1);
-           strcpy(args.paths[args.pathsLen], argv[idx]);
+           //args.paths[args.pathsLen] = (char *)malloc(strlen(argv[idx]) + 1);
+           strcpy(args.paths[args.pathsLen].input, argv[idx]);
            args.pathsLen++;
            idx++;
          }
