@@ -16,6 +16,6 @@
 -#Run _out/Windows_{_sOpt}/rp.exe -f test.cpp -o test/ 
                -r {DATA} hellowolrd
                -ra {TEST} MyTest
-               
-               
+               -r "Bonjour hellowolrd" Hello
+               -r aaaa bbbb
 >
