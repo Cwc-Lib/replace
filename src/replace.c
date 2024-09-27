@@ -88,7 +88,9 @@ int write_file(struct Args* args, const char *path,  char *zContent, char *modif
 // Replaces x with y in FILE of path.
 // If something wents wrong, error will be logged in console
 // appropriate error number will be returned.
-int replace(struct Args* args, const char *path) {
+int replace(struct Args* args, file_t* rule) {
+
+char* path = rule->norm_path;
   char *zContent = readFileContent(path);
   if (zContent == NULL) {
     return 1;
@@ -118,10 +120,16 @@ int replace(struct Args* args, const char *path) {
       int sz = strlen(path)-1;
       while(sz>0 && !(path[sz]=='/' || path[sz]=='\\')){sz--;}   
       if(sz){
-        char vla[sz+args->out_dirLen+1];
-         sprintf(vla, "%.*s%s%s",sz+1, path, args->out_dir, &path[sz+1] );
-         printf("\nOut file %s\n", vla);
-         write_file(args, vla, zContent,modifiedContent);
+        //char vla[sz+args->out_dirLen+1];
+       //  sprintf(vla, "%.*s%s%s",sz+1, path, args->out_dir, &path[sz+1] );
+         sprintf(rule->output, "%.*s%s%s",sz+1, path, args->out_dir, &path[sz+1] );
+                
+    // args->paths[args.pathsLen].output
+     
+         
+         
+         printf("\nOut file %s\n", rule->output);
+         write_file(args, rule->output, zContent,modifiedContent);
          
          return 0;
       }

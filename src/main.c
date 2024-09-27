@@ -12,22 +12,18 @@ int main(int argc, char *argv[]) {
   checkArgs(argc, argv);
 
   struct Args args = parseArgs(argc, argv);
-  struct FilePathRule *rules = generateFilePathRules(args.pathsLen, args.paths);
-  int len = args.pathsLen;
-  if (len == 0) {
-    len = 1;
-  }
 
-  char **replaced = forEachRule(rules, len, &args, replace);
-  for (int i = 0; replaced[i] != NULL; i++) {
-   for(int j = 0; j < args.action_sz; j++){
-     
-   //  modifiedContent = replaceXY(args.action[i].target, args.action[i].replace, args.wordMatch, modifiedContent);
-     printf("Replaced[%d]: '%s' with '%s' from %s\n",  args.action[j].replace_count, args.action[j].target, args.action[j].replace, replaced[i] );
+  forEachRule(args.paths, args.pathsLen, &args);
+     printf("--\n");
+   for (int i = 0; i< args.pathsLen; i++) {
+      for(int j = 0; j < args.action_sz; j++){
+         printf("%s[%d]: '%s' \n", args.paths[i].norm_path,  args.action[j].replace_count, args.action[j].target );
+         printf("%s: '%s'\n", args.paths[i].output, args.action[j].replace );
+         printf("--\n");
+      }
    }
-  }
-  free(replaced);
-  free(rules);
+//  free(replaced);
+ // free(rules);
 
   return EXIT_SUCCESS;
 }

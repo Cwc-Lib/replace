@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+
 char *strndup(const char *s, size_t n) {
     size_t len = strlen(s);
     if (n < len) {
@@ -21,7 +22,7 @@ char *strndup(const char *s, size_t n) {
     }
     return dup;
 }
-
+/*
 // Generate a FilePathRule from the provided path, separating the target and
 // prefix if present.
 struct FilePathRule generateFilePathRule(char *path) {
@@ -51,14 +52,14 @@ struct FilePathRule generateFilePathRule(char *path) {
   }
   fpr.prefix = lastPrefixIndicator;
   return fpr;
-}
-
+}*/
+/*
 // Generate a list of FilePathRules from the provided list of paths.
 // Essentially, this function converts an Args structure into an array of
 // FilePathRules.
 struct FilePathRule *generateFilePathRules(int pathsLen, file_t* paths) {
   if (pathsLen == 0 || paths == NULL) {
-    struct FilePathRule *rules =
+    struct FilePathRule* rules =
         (struct FilePathRule *)malloc(sizeof(struct FilePathRule));
     if (rules == NULL) {
       // TODO: implement errors.
@@ -66,14 +67,13 @@ struct FilePathRule *generateFilePathRules(int pathsLen, file_t* paths) {
       exit(EXIT_FAILURE);
     }
     struct FilePathRule rule;
-    rule.path = NULL;
-    rule.prefix = NULL;
+    rule->path = NULL;
+    rule->prefix = NULL;
     rules[0] = rule;
     return rules;
   }
 
-  struct FilePathRule *rules =
-      (struct FilePathRule *)malloc(pathsLen * sizeof(struct FilePathRule));
+  struct FilePathRule *rules =(struct FilePathRule *)malloc(pathsLen * sizeof(struct FilePathRule));
 
   if (rules == NULL) {
     // TODO: implement errors.
@@ -86,8 +86,8 @@ struct FilePathRule *generateFilePathRules(int pathsLen, file_t* paths) {
   }
 
   return rules;
-}
-
+}*/
+/*
 // Recursively collects files and directories under the specified base path
 // (bp), based on the given prefix (pr) and stores them in the result array.
 void forEachFile(const char *bp, const char *pr, struct Args* args, int *count,
@@ -116,14 +116,15 @@ void forEachFile(const char *bp, const char *pr, struct Args* args, int *count,
     
     //TODO FIXEME
     printf("\nFIXME(if folder): %s", path);
-/*
-    if (entry->d_type == DT_DIR) {
-      forEachFile(path, pr, args, count, result, replace);
-      continue;
-    }
-*/
+
+ //   if (entry->d_type == DT_DIR) {
+ //     forEachFile(path, pr, args, count, result, replace);
+ //     continue;
+ //   }
+
     if (pr == NULL || (pr && strstr(entry->d_name, pr) != NULL)) {
       int hasReplaced = replace(args, path);
+      printf("replace11\n");
       if (hasReplaced != 0) {
         continue;
       }
@@ -139,19 +140,12 @@ void forEachFile(const char *bp, const char *pr, struct Args* args, int *count,
 
   closedir(dir);
 }
-
+*/
 // Generates full paths based on an array of FilePathRule structures.
-char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args,
-                   rp replace) {
-  char **result = (char **)malloc(sizeof(char *));
-  if (!result) {
-    perror("Memory allocation error");
-    exit(EXIT_FAILURE);
-  }
+bool forEachRule(file_t* rules, int rulesCount, struct Args* args) {
 
-  int totalCount = 0;
   for (int i = 0; i < rulesCount; i++) {
-    struct FilePathRule rule = rules[i];
+   file_t* rule = &rules[i];
 
     char *cwd = getcwd(NULL, 0);
     if (!cwd) {
@@ -159,35 +153,18 @@ char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args
       exit(EXIT_FAILURE);
     }
 
-    if (rule.path == NULL || strcmp(rule.path, "") == 0) {
-      rule.path = strdup(cwd);
+    if (rule->input == NULL || strcmp(rule->input, "") == 0) {
+      rule->norm_path = strdup(cwd);
     } else {
-      rule.path = strdup(concatenateStrings(cwd, rule.path));
+      rule->norm_path = strdup(concatenateStrings(cwd, rule->input));
     }
     free(cwd);
 
-    struct stat path_stat;
-    if (stat(rule.path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode)) {
-      forEachFile(rule.path, rule.prefix, args, &totalCount, &result, replace);
-      continue;
-    }
+    int hasReplaced = replace(args, rule);
 
-    int hasReplaced = replace(args, rule.path);
-    if (hasReplaced != 0) {
-      continue;
-    }
-
-    result[totalCount++] = strdup(rule.path);
-    result = (char **)realloc(result, sizeof(char *) * (totalCount + 1));
-    if (!result) {
-      // TODO: implement errors.
-      perror("Memory allocation error");
-      exit(EXIT_FAILURE);
-    }
   }
 
-  result[totalCount] = NULL;
-  return result;
+  return true;
 }
 
 // Reads the file content to string from path.

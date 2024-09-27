@@ -2,6 +2,7 @@
 #define FILES_H
 
 #include "args.h"
+#include <stdbool.h>
 
 /**
  * @struct FilePathRule
@@ -80,8 +81,7 @@ void forEachFile(const char *bp, const char *pr, struct Args* args, int *count, 
  * @param replace A function pointer for a custom replacement method.
  * @return An array of full paths based on the rules provided.
  */
-char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args,
-                   rp replace);
+bool forEachRule(file_t *rules, int rulesCount, struct Args* args);
 
 /**
  * @brief Read the content of a file specified by its path.
@@ -94,5 +94,8 @@ char **forEachRule(struct FilePathRule *rules, int rulesCount, struct Args* args
  * occurs.
  */
 char *readFileContent(const char *path);
+
+int replace(struct Args* args, file_t*path);
+
 
 #endif

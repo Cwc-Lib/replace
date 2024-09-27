@@ -22,11 +22,15 @@ typedef struct action_t{
 }action_t;
  
  #define MAX_PATH 256
- #define MAX_FILE 10
+ #define MAX_FILE 20
  
 typedef struct file_t{
    char input[MAX_PATH];
-   //char output[MAX_PATH];
+   char output[MAX_PATH];
+   
+   
+   
+   char* norm_path;
 }file_t;
  
  
